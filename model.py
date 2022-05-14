@@ -20,6 +20,6 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     id_telegram = Column('id_Telegram', Integer, unique=True)
     name  = Column('name', String(32))
-    surname = Column('surname', String(32))
+    last_name = Column('last_name', String(32))
     username = Column('username', String(32), unique=True)
     admin = Column('admin',Boolean)
