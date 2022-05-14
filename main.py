@@ -5,14 +5,13 @@ from sqlalchemy         import create_engine
 from sqlalchemy.orm     import sessionmaker
 
 from model import User, db_connect, create_table
-import Points
+import os
 from telebot import util
 
 bot = TeleBot(BOT_TOKEN, threaded=False)
 
 
 hideBoard = types.ReplyKeyboardRemove()  
-
 
 
 @bot.message_handler(commands=['start'])

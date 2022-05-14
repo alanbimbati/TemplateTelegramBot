@@ -5,12 +5,12 @@ from sqlalchemy                 import create_engine, Column, Table, ForeignKey,
 from sqlalchemy.orm             import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy                 import (Integer, String, Date, DateTime, Float, Boolean, Text)
-
+from settings import *
 Base = declarative_base()
 
 
 def db_connect():
-    return create_engine('sqlite:///points.db')
+    return create_engine('sqlite:///'+DB_NAME+'.db')
     
 def create_table(engine):
     Base.metadata.create_all(engine)
