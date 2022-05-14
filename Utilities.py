@@ -16,18 +16,17 @@ class Utilities:
         create_table(engine)
         self.Session = sessionmaker(bind=engine)
 
-    def CreateUser(self, message):
+    def CreateUserIfNotExist(self, message):
         session = self.Session()
+        print(message)
         if message.chat.type == "group" or message.chat.type == "supergroup":
-            chatid =        message.from_user.id
-            username =      '@'+message.from_user.username
-            name =          message.from_user.first_name
-            last_name =     message.from_user.last_name
+            info = message.from_user
         elif message.chat.type == 'private':
-            chatid = message.chat.id
-            username = '@'+message.chat.username
-            name = message.chat.first_name
-            last_name = message.chat.last_name
+            info = message.chat
+        chatid = info.id
+        username = '@'+info.username
+        name = info.first_name
+        last_name = info.last_name
 
         exist = session.query(User).filter_by(id_telegram = chatid).first()
         firstUser = len(session.query(User).all())==0
@@ -55,18 +54,16 @@ class Utilities:
             self.update_user(chatid,{'username':username})
         return False
 
-    def getUtente(self, target):
+    def getUser(self, target):
         session = self.Session()
         utente = None
         target = str(target)
             
         if target.startswith('@'):
             utente = session.query(User).filter_by(username = target).first()
-        else:
-            chatid = target
-            if (chatid.isdigit()):
-                chatid = int(chatid)
-                utente = session.query(User).filter_by(id_telegram = chatid).first()
+        elif chatid.isdigit():
+            chatid = int(target)
+            utente = session.query(User).filter_by(id_telegram = chatid).first()
         return utente
 
 
@@ -96,7 +93,9 @@ class Utilities:
         return nome
 
     def addAdmin(self,utente):
-        session = self.Session()       
+        session = self.Session()
+        if utente is None:
+            return False     
         exist = session.query(User).filter_by(id_telegram = utente.id_telegram,admin=1).first()
         if exist is None:
             user = session.query(User).filter_by(id_telegram = utente.id_telegram).first()
