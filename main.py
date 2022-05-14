@@ -4,7 +4,7 @@ from settings import *
 from sqlalchemy         import create_engine
 from sqlalchemy.orm     import sessionmaker
 
-from model import Utente,Points, db_connect, create_table
+from model import User, db_connect, create_table
 import Points
 from telebot import util
 
