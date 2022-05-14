@@ -29,7 +29,6 @@ def start(message):
 
 @bot.message_handler(commands=['newAdmin'])
 def newAdmin(message):
-   print("newAdmin")
    utility = Utilities()
    # /newAdmin @username
    tokenized = message.text.split()
@@ -44,10 +43,21 @@ def newAdmin(message):
    else:
       bot.reply_to(message,"To add an admin type '/newAdmin @username'",reply_markup=hideBoard)
 
+@bot.message_handler(commands=['deleteMe'])
+def deleteMe(message):
+   msg = bot.reply_to(message, 'Are you sure to delete your account? then write `YES,I AM`',parse_mode='markdown')
+   bot.register_next_step_handler(msg, Delete)
+def Delete(message):
+   utility = Utilities()
+   if message.text=='YES,I AM':
+      chatid = getChatid(message)
+      utility.deleteAccount(chatid)
+      bot.reply_to(message,'Your account is deleted')
+   else:
+      bot.reply_to(message, 'Good news! Your account still alive!')
 
 @bot.message_handler(content_types=util.content_type_media)
 def any(message):
-   print("any")
    utility = Utilities()
    if utility.CreateUserIfNotExist(message):
       welcome(message)

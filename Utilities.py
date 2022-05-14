@@ -18,7 +18,6 @@ class Utilities:
 
     def CreateUserIfNotExist(self, message):
         session = self.Session()
-        print(message)
         if message.chat.type == "group" or message.chat.type == "supergroup":
             info = message.from_user
         elif message.chat.type == 'private':
@@ -58,10 +57,9 @@ class Utilities:
         session = self.Session()
         utente = None
         target = str(target)
-            
         if target.startswith('@'):
             utente = session.query(User).filter_by(username = target).first()
-        elif chatid.isdigit():
+        elif target.isdigit():
             chatid = int(target)
             utente = session.query(User).filter_by(id_telegram = chatid).first()
         return utente
