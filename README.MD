@@ -16,7 +16,7 @@ pip3 install requirements.txt
 ```
 ## Configuration
 
-modfy the ```bash settings.py``` file
+modfy the ```settings.py``` file
 
 # Set Backup Database
 
@@ -52,3 +52,25 @@ This is a temprary way to run it, a server is always a better way to host it: yo
 * Install Termux on your Android device
 * Open it and clone the repository: ```git clone https://github.com/alanbimbati/TemplateTelegramBot```
 * Simply starting the bot here
+
+# Usage
+## Start the bot
+Write ```/start``` to start the bot. You will be stored on the database
+## Add Administrator
+Write ```/addAdmin @username``` to add other administrator
+### Is admin
+You can check if a user is admin with the right function. First get the chatid of the user
+```chatid = getChaid(message)```
+then get the user profile from the chatid
+```
+from Utilities import Utilities
+utility = Utilities()
+user = utility.getUser(chatid)
+```
+then check if is the user is admin
+```
+if utility.isAdmin(user):
+```
+
+## Delete account
+Write ```/deleteMe``` to delete your account (respect GDPR)
