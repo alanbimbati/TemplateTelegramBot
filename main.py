@@ -101,8 +101,18 @@ def subMenu(message):
    msg = bot.reply_to(message,"Choose a command",reply_markup=markup)
    bot.register_next_step_handler(msg,subMenu)
    
+@bot.message_handler(commands=['restore'])
+def restoreRequest(message):
+   msg = bot.reply_to(message,"Send me the backup file to restore")
+   bot.register_next_step_handler(msg,Restore)
 
-
+def Restore(message):
+   if message.document.file_name==DB_NAME+'.db':
+        f = bot.get_file(message.document.file_id)
+        downloaded_file = bot.download_file(f.file_path)
+        with open(DB_NAME+'.db', 'wb') as new_file:
+            new_file.write(downloaded_file)
+        bot.reply_to(message, "Database restored")
 
 # Any other messages
 @bot.message_handler(content_types=util.content_type_media)
