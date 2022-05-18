@@ -107,12 +107,20 @@ def restoreRequest(message):
    bot.register_next_step_handler(msg,Restore)
 
 def Restore(message):
-   if message.document.file_name==DB_NAME+'.db':
-        f = bot.get_file(message.document.file_id)
-        downloaded_file = bot.download_file(f.file_path)
-        with open(DB_NAME+'.db', 'wb') as new_file:
-            new_file.write(downloaded_file)
-        bot.reply_to(message, "Database restored")
+   chatid = getChatid(message)
+   utility = Utilities()
+   user = utility.getUser(chatid)
+   if utility.isAdmin(user) and ALLOW_ADMIN_RESTORE:      
+      if message.document.file_name==DB_NAME+'.db':
+         f = bot.get_file(message.document.file_id)
+         downloaded_file = bot.download_file(f.file_path)
+         with open(DB_NAME+'.db', 'wb') as new_file:
+               new_file.write(downloaded_file)
+         bot.reply_to(message, "Database restored")
+      else:
+         bot.reply_to(message,'You have not sent me the right backup')
+   else:
+      bot.reply_to('Sorry, only admin can do it with the right flag on the settings.py file')
 
 # Any other messages
 @bot.message_handler(content_types=util.content_type_media)
