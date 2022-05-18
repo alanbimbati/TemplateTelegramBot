@@ -1,7 +1,7 @@
 from telebot import types
 from telebot import TeleBot
 from settings import *
-from sqlalchemy         import create_engine
+from sqlalchemy         import create_engine, true
 from sqlalchemy.orm     import sessionmaker
 
 from model import User, db_connect, create_table
@@ -56,6 +56,55 @@ def Delete(message):
    else:
       bot.reply_to(message, 'Good news! Your account still alive!')
 
+@bot.message_handler(commands=['menu'])
+def menu(message):
+   utility = Utilities()
+   father = None
+   menu = utility.menu(father)
+   markup = types.ReplyKeyboardMarkup()
+   for item in menu:
+      markup.add(item.command)
+
+   msg = bot.reply_to(message,"Choose a command",reply_markup=markup)
+   bot.register_next_step_handler(msg,subMenu)
+
+@bot.message_handler(commands=['addCommand'])
+def addCommand(message):
+   utility = Utilities()
+   chatid = getChatid(message)
+   user = utility.getUser(chatid)
+   tokenized = message.text.split()
+   command = None
+   father  = None
+   if len(tokenized)>=2:
+      # /addCommand comando father
+      try:
+         command = tokenized[1]
+         father = tokenized[2]
+      except:
+         print('father does not exist, I create a command on root')
+      if utility.isAdmin(user):
+         utility.addCommand(command,father)
+   else:
+      bot.reply_to(message, "To add a command type _/addCommand command father_\n you can even type _/addCommand command_ withouth the father, the command will appear on the root menu",parse_mode='markdown')
+
+
+
+def subMenu(message):
+   print(message.text)
+   utility = Utilities()
+   father = message.text
+   subMenu = utility.menu(father)
+   markup = types.ReplyKeyboardMarkup()
+   for item in subMenu:
+      markup.add(item.command)
+   msg = bot.reply_to(message,"Choose a command",reply_markup=markup)
+   bot.register_next_step_handler(msg,subMenu)
+   
+
+
+
+# Any other messages
 @bot.message_handler(content_types=util.content_type_media)
 def any(message):
    utility = Utilities()

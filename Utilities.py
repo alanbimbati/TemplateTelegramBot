@@ -6,7 +6,7 @@ from sqlalchemy         import create_engine, null
 from sqlalchemy         import update
 from sqlalchemy         import desc
 from sqlalchemy.orm     import sessionmaker
-from model import User, db_connect, create_table
+from model import User,Menu, db_connect, create_table
 
 from settings import *
 
@@ -110,3 +110,28 @@ class Utilities:
             return True
         else:
             return False
+
+    def menu(self,father):
+        session = self.Session()
+        menu = session.query(Menu).filter_by(father = father).all()
+        return menu
+
+    def addCommand(self,command,father):
+        session = self.Session()    
+        exist = session.query(Menu).filter_by(command = command,father=father).first()
+        if exist is None:  
+            try:
+                menu = Menu()
+                menu.command = command
+                menu.father  = father
+                session.add(menu)
+                session.commit()
+            except:
+                session.rollback()
+                raise
+            finally:
+                session.close()
+            return True
+        else:
+            return False
+            

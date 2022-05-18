@@ -23,3 +23,11 @@ class User(Base):
     last_name = Column('last_name', String(32))
     username = Column('username', String(32), unique=True)
     admin = Column('admin',Boolean)
+
+class Menu(Base):
+    __tablename__ = "menu"
+    id = Column(Integer, primary_key=True)
+    command = Column('command',  String(64), unique=True)
+    father  = Column('father', String(64))
+    function_name = Column('function_name',String(64))
+    
